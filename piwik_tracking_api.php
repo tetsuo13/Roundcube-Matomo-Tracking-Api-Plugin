@@ -50,9 +50,9 @@ class piwik_tracking_api extends rcube_plugin
 
         $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://')
              . $_SERVER['SERVER_NAME']
-             . $_SERVER['REQUEST_URI']);
+             . $_SERVER['REQUEST_URI'];
 
-        $tracker->setUrl();
+        $tracker->setUrl($url);
 
         if ($this->gset('HTTP_REFERER')) {
             $tracker->setUrlReferer($_SERVER['HTTP_REFERER']);
