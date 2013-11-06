@@ -5,7 +5,7 @@
  *
  * Adds the PHP Piwki tracking API.
  *
- * @version rc0.9.5-piwik1-1.0
+ * @version rc0.9.5-piwik1-1.1
  * @author  Andrei Nicholson
  * @url     https://github.com/tetsuo13/Roundcube-Piwik-Tracking-Api-Plugin
  */
