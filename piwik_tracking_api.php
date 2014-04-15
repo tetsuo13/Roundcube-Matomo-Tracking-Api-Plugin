@@ -5,7 +5,7 @@
  *
  * Adds the PHP Piwki tracking API.
  *
- * @version rc1.0.0-piwik1-1.0
+ * @version rc1.0.0-piwik1-1.1
  * @author  Andrei Nicholson
  * @url     https://github.com/tetsuo13/Roundcube-Piwik-Tracking-Api-Plugin
  */
@@ -48,7 +48,7 @@ class piwik_tracking_api extends rcube_plugin
             $tracker->setUserAgent($_SERVER['HTTP_USER_AGENT']);
         }
 
-        $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://')
+        $url = ($this->gset('HTTPS') && $_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://')
              . $_SERVER['SERVER_NAME']
              . $_SERVER['REQUEST_URI'];
 
@@ -62,7 +62,7 @@ class piwik_tracking_api extends rcube_plugin
             $tracker->setIp($_SERVER['REMOTE_ADDR']);
         }
 
-        $tracker->doTrackPageView();
+        $tracker->doTrackPageView('');
     }
 
     /**
