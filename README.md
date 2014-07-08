@@ -2,11 +2,11 @@ Piwik Tracking Plugin for Roundcube
 ===================================
 
 This plugin integrates Piwik analytics using the
-[Piwik Tracking API](http://piwik.org/docs/tracking-api/) into Roundcube. This
+[Piwik Tracking API](https://piwik.org/docs/tracking-api/) into Roundcube. This
 plugin is very different from the
 [Roundcube Webmail piwik analytics plugin](http://blog.no-panic.at/projects/roundcube-webmail-piwik-analytics-plugin/)
 which adds the client-side
-[JavaScript Tracking Tag](http://piwik.org/docs/javascript-tracking/). The aim
+[JavaScript Tracking Tag](https://piwik.org/docs/javascript-tracking/). The aim
 of this plugin is to add Piwik integration on the server-side in order to get
 around same-origin policy.
 
