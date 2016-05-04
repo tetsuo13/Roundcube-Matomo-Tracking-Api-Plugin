@@ -20,14 +20,6 @@ JavaScript Tracking Tag. Some example cases where this plugin shines:
 * Piwik at `http://analytics.company.com`, Roundcube at
   `http://webmail.othercompany.com`
 
-The version numbers used reflect three different components: supported
-Roundcube version, supported Piwik Tracking API library, version of the this
-plugin for the two Roundcube and Piwik components. For example, the initial
-version of this plugin which supports Roundcube 0.9.5 and Piwik Tracking API
-1 is rc0.9.5-piwik1-1.0. The compatibility list for the Piwik Tracking API
-against versions of Piwik is unknown, so go with the highest available
-version if your Piwik installation is kept reasonably up to date.
-
 ## Install
 
 Install using Composer or manually download and install into
