@@ -20,3 +20,7 @@ $rcmail_config['piwik_tracking_api_site_id'] = null;
 // address.
 $rcmail_config['piwik_tracking_api_token_auth'] = null;
 
+// Optional, custom variable slot ID to record the email of the logged in
+// user. If used, this should be a number from 1 to 5.
+$rcmail_config['piwik_tracking_api_user_email_custom_var'] = null;
+

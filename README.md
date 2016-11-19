@@ -32,7 +32,7 @@ enable the plugin.
 ## Configuration
 
 Copy `config.inc.php.dist` to `config.inc.php` and edit the configuration
-variables.
+variables. Set optional variables to `null` when unused.
 
 **piwik_tracking_api_url** [string]
 
@@ -62,4 +62,9 @@ advanced tracking. Currently utilizes the following if provided:
 
 * Sets remote IP to that of the user instead of defaulting to the IP of the
   Roundcube installation.
+
+**piwik_tracking_api_user_email_custom_var** [int] _(Optional)_
+
+Custom variable slot ID to record the email of the logged in user. If used,
+this should be a number from 1 to 5.
 
