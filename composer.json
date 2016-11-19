@@ -3,7 +3,7 @@
     "description": "Add Piwik tracking server-side code to all requests in Roundcube",
     "type": "roundcube-plugin",
     "license": "GPL-3.0",
-    "version": "1.0.5",
+    "version": "1.1.0",
     "homepage": "https://github.com/tetsuo13/Roundcube-Piwik-Tracking-Api-Plugin",
     "keywords": ["roundcube", "mail", "piwik", "tracking", "analytics"],
     "authors": [
