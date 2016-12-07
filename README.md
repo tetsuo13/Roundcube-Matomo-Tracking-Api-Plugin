@@ -55,6 +55,13 @@ $rcmail_config['piwik_tracking_api_site_id'] = array(
 );
 ```
 
+**piwik_tracking_api_track_user_id** [boolean]
+
+When enabled, the user's email address will be used to connect multiple
+devices and browsers. See
+[Benefits of User ID](https://piwik.org/docs/user-id/#benefits-of-user-id)
+at Piwik's User Guide for more information.
+
 **piwik_tracking_api_token_auth** [string] _(Optional)_
 
 Set to the token auth key of a Piwik user in order to take advantage of
@@ -62,9 +69,4 @@ advanced tracking. Currently utilizes the following if provided:
 
 * Sets remote IP to that of the user instead of defaulting to the IP of the
   Roundcube installation.
-
-**piwik_tracking_api_user_email_custom_var** [int] _(Optional)_
-
-Custom variable slot ID to record the email of the logged in user. If used,
-this should be a number from 1 to 5.
 

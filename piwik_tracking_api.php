@@ -44,28 +44,14 @@ class piwik_tracking_api extends rcube_plugin
             $tracker->setTokenAuth($tokenAuth);
         }
 
-        $userEmailCustomVar = $rcmail->config->get('piwik_tracking_api_user_email_custom_var', null);
+        $trackUserId = $rcmail->config->get('piwik_tracking_api_track_user_id', false);
 
-        if ($userEmailCustomVar !== null) {
-            if (!is_int($userEmailCustomVar)) {
-                rcmail::raise_error(
-                    array(
-                        'code' => 5,
-                        'type' => 'php',
-                        'file' => __FILE__,
-                        'line' => __LINE__,
-                        'message' => 'Custom variable ID for user email should be an integer'
-                    ),
-                    true,
-                    false
-                );
-            } else {
-                // Unauthenticated users will return false.
-                $userEmail = $rcmail->get_user_email();
+        if ($trackUserId === true) {
+            // Unauthenticated users will return false.
+            $userEmail = $rcmail->get_user_email();
 
-                if ($userEmail !== false) {
-                    $tracker->setCustomVariable($userEmailCustomVar, 'User email', $userEmail);
-                }
+            if ($userEmail !== false) {
+                $tracker->setUserId($userEmail);
             }
         }
 
