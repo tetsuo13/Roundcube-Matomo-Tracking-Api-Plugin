@@ -26,6 +26,6 @@
     ],
     "require": {
         "roundcube/plugin-installer": "~0.1",
-        "piwik/piwik-php-tracker": "~1"
+        "piwik/piwik-php-tracker": "~3"
     }
 }
