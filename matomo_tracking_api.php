@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Piwki Tracking API.
+ * Matomo Tracking API.
  *
- * Adds the PHP Piwki tracking API.
+ * Adds the PHP Matomo tracking API.
  *
- * @version 2.0.0
+ * @version 3.0.0
  * @author  Andrei Nicholson
- * @url     https://github.com/tetsuo13/Roundcube-Piwik-Tracking-Api-Plugin
+ * @url     https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin
  */
-class piwik_tracking_api extends rcube_plugin
+class matomo_tracking_api extends rcube_plugin
 {
     /**
      * Entry point for plugin. Track on all events.
@@ -38,13 +38,13 @@ class piwik_tracking_api extends rcube_plugin
 
         $tracker = new PiwikTracker($siteId);
 
-        $tokenAuth = $rcmail->config->get('piwik_tracking_api_token_auth', null);
+        $tokenAuth = $rcmail->config->get('matomo_tracking_api_token_auth', null);
 
         if ($tokenAuth !== null) {
             $tracker->setTokenAuth($tokenAuth);
         }
 
-        $trackUserId = $rcmail->config->get('piwik_tracking_api_track_user_id', false);
+        $trackUserId = $rcmail->config->get('matomo_tracking_api_track_user_id', false);
 
         if ($trackUserId === true) {
             // Unauthenticated users will return false.
@@ -88,14 +88,14 @@ class piwik_tracking_api extends rcube_plugin
     }
 
     /**
-     * Get the required Piwik tracking URL from config.
+     * Get the required Matomo tracking URL from config.
      *
      * @param rcube $rcmail Roundcube object.
      * @return string Tracking URL.
      */
     private function getTrackingUrl(rcube $rcmail)
     {
-        $trackingUrl = $rcmail->config->get('piwik_tracking_api_url', null);
+        $trackingUrl = $rcmail->config->get('matomo_tracking_api_url', null);
 
         if ($trackingUrl === null) {
             rcmail::raise_error(
@@ -104,7 +104,7 @@ class piwik_tracking_api extends rcube_plugin
                     'type' => 'php',
                     'file' => __FILE__,
                     'line' => __LINE__,
-                    'message' => 'tracking URL is required for the piwik_tracking_api plugin'
+                    'message' => 'tracking URL is required for the matomo_tracking_api plugin'
                 ),
                 true,
                 false
@@ -116,14 +116,14 @@ class piwik_tracking_api extends rcube_plugin
     }
 
     /**
-     * Get the required Piwik site ID from config.
+     * Get the required Matomo site ID from config.
      *
      * @param rcmail $rcmail Roundcube object.
      * @return int Site ID.
      */
     private function getSiteId(rcmail $rcmail)
     {
-        $siteId = $rcmail->config->get('piwik_tracking_api_site_id', null);
+        $siteId = $rcmail->config->get('matomo_tracking_api_site_id', null);
 
         if ($siteId === null) {
             rcmail::raise_error(
@@ -132,7 +132,7 @@ class piwik_tracking_api extends rcube_plugin
                     'type' => 'php',
                     'file' => __FILE__,
                     'line' => __LINE__,
-                    'message' => 'site ID required for the piwik_tracking_api plugin'
+                    'message' => 'site ID required for the matomo_tracking_api plugin'
                 ),
                 true,
                 false
@@ -154,7 +154,7 @@ class piwik_tracking_api extends rcube_plugin
                 'type' => 'php',
                 'file' => __FILE__,
                 'line' => __LINE__,
-                'message' => 'unable to find ' . $_SERVER['SERVER_NAME'] . ' in site ID array for piwik_tracking_api plugin'
+                'message' => 'unable to find ' . $_SERVER['SERVER_NAME'] . ' in site ID array for matomo_tracking_api plugin'
             ),
             true,
             false

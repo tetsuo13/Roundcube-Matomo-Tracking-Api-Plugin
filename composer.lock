@@ -1,0 +1,120 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "6c1c6ebb127f3bfc8b154ef6744875b1",
+    "packages": [
+        {
+            "name": "matomo/matomo-php-tracker",
+            "version": "1.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/matomo-org/matomo-php-tracker.git",
+                "reference": "314e6d00039cb9d99837c81cdf4cbcd19f5683e0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/matomo-org/matomo-php-tracker/zipball/314e6d00039cb9d99837c81cdf4cbcd19f5683e0",
+                "reference": "314e6d00039cb9d99837c81cdf4cbcd19f5683e0",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "."
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "The Piwik Team",
+                    "email": "hello@piwik.org",
+                    "homepage": "http://piwik.org/the-piwik-team/"
+                }
+            ],
+            "description": "PHP Client for Piwik Analytics Tracking API",
+            "homepage": "http://piwik.org",
+            "keywords": [
+                "analytics",
+                "piwik",
+                "tracker"
+            ],
+            "support": {
+                "forum": "http://forum.piwik.org/",
+                "issues": "https://github.com/piwik/piwik-php-tracker/issues",
+                "source": "https://github.com/piwik/piwik-php-tracker"
+            },
+            "time": "2019-12-23T21:48:04+00:00"
+        },
+        {
+            "name": "roundcube/plugin-installer",
+            "version": "0.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/roundcube/plugin-installer.git",
+                "reference": "9c66c276b795eea1a32eb864b2c6c1f682cdc027"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/roundcube/plugin-installer/zipball/9c66c276b795eea1a32eb864b2c6c1f682cdc027",
+                "reference": "9c66c276b795eea1a32eb864b2c6c1f682cdc027",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0 || ^2.0"
+            },
+            "require-dev": {
+                "composer/composer": "*"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": [
+                    "Roundcube\\Composer\\RoundcubeInstaller"
+                ]
+            },
+            "autoload": {
+                "psr-0": {
+                    "Roundcube\\Composer": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Bruederli",
+                    "email": "thomas@roundcube.net"
+                },
+                {
+                    "name": "Till Klampaeckel",
+                    "email": "till@php.net"
+                },
+                {
+                    "name": "Philip Weir",
+                    "email": "roundcube@tehinterweb.co.uk"
+                }
+            ],
+            "description": "A composer-installer for Roundcube plugins and skins.",
+            "support": {
+                "issues": "https://github.com/roundcube/plugin-installer/issues",
+                "source": "https://github.com/roundcube/plugin-installer/tree/0.3.1"
+            },
+            "time": "2021-10-24T13:38:11+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
+}

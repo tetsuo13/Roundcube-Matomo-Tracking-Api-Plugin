@@ -1,25 +1,25 @@
 <?php
 
-// URL to Piwik installation.
-$rcmail_config['piwik_tracking_api_url'] = null;
+// URL to Matomo installation.
+$rcmail_config['matomo_tracking_api_url'] = null;
 
-// Piwik website ID. This value can either be a single ID or an array
+// Matomo website ID. This value can either be a single ID or an array
 // containing multiple server names and IDs in cases where Roundcube serves
 // multiple hosts through a single installation.
 //
-// To set multiple hosts, use a key => value pair of the host name and Piwik
+// To set multiple hosts, use a key => value pair of the host name and Matomo
 // website ID. For example:
 //
-//   $rcmail_config['piwik_tracking_api_site_id'] = array(
+//   $rcmail_config['matomo_tracking_api_site_id'] = array(
 //       'webmail.foo.com' => 42,
 //       'webmail.bar.com' => 13
 //   );
-$rcmail_config['piwik_tracking_api_site_id'] = null;
+$rcmail_config['matomo_tracking_api_site_id'] = null;
 
 // Connect together a user's usage data across multiple devices and browsers.
-$rcmail_config['piwik_tracking_api_track_user_id'] = false;
+$rcmail_config['matomo_tracking_api_track_user_id'] = false;
 
 // Optional, tracking request authentication token required to track user IP
 // address.
-$rcmail_config['piwik_tracking_api_token_auth'] = null;
+$rcmail_config['matomo_tracking_api_token_auth'] = null;
 
