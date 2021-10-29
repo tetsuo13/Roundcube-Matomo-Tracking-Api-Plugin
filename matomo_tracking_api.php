@@ -16,7 +16,7 @@ class matomo_tracking_api extends rcube_plugin
      */
     public function init()
     {
-        require_once dirname(__FILE__) . '/PiwikTracker.php';
+        require_once dirname(__FILE__) . '/MatomoTracker.php';
 
         $rcmail = rcmail::get_instance();
 
@@ -28,7 +28,7 @@ class matomo_tracking_api extends rcube_plugin
             return;
         }
 
-        PiwikTracker::$URL = $trackingUrl;
+        MatomoTracker::$URL = $trackingUrl;
 
         $siteId = $this->getSiteId($rcmail);
 
@@ -36,7 +36,7 @@ class matomo_tracking_api extends rcube_plugin
             return;
         }
 
-        $tracker = new PiwikTracker($siteId);
+        $tracker = new MatomoTracker($siteId);
 
         $tokenAuth = $rcmail->config->get('matomo_tracking_api_token_auth', null);
 

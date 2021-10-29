@@ -24,6 +24,6 @@
     ],
     "require": {
         "roundcube/plugin-installer": "~0.1",
-        "matomo/matomo-php-tracker": "~1"
+        "matomo/matomo-php-tracker": "^3.0"
     }
 }

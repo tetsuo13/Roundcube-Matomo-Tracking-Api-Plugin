@@ -4,21 +4,31 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "886aed339aeeb5a5cf35b892af0f26b5",
+    "content-hash": "3ef6e83b49f251447857cb27b775cf3d",
     "packages": [
         {
             "name": "matomo/matomo-php-tracker",
-            "version": "1.5.2",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matomo-org/matomo-php-tracker.git",
-                "reference": "314e6d00039cb9d99837c81cdf4cbcd19f5683e0"
+                "reference": "320756c1a85ea9092387ab51032da6db2f9ffec2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matomo-org/matomo-php-tracker/zipball/314e6d00039cb9d99837c81cdf4cbcd19f5683e0",
-                "reference": "314e6d00039cb9d99837c81cdf4cbcd19f5683e0",
+                "url": "https://api.github.com/repos/matomo-org/matomo-php-tracker/zipball/320756c1a85ea9092387ab51032da6db2f9ffec2",
+                "reference": "320756c1a85ea9092387ab51032da6db2f9ffec2",
                 "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.3"
+            },
+            "suggest": {
+                "ext-curl": "Using this extension to issue the HTTPS request to Matomo"
             },
             "type": "library",
             "autoload": {
@@ -28,28 +38,29 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-2-Clause"
+                "BSD-3-Clause"
             ],
             "authors": [
                 {
-                    "name": "The Piwik Team",
-                    "email": "hello@piwik.org",
-                    "homepage": "http://piwik.org/the-piwik-team/"
+                    "name": "The Matomo Team",
+                    "email": "hello@matomo.org",
+                    "homepage": "https://matomo.org/team/"
                 }
             ],
-            "description": "PHP Client for Piwik Analytics Tracking API",
-            "homepage": "http://piwik.org",
+            "description": "PHP Client for Matomo Analytics Tracking API",
+            "homepage": "https://matomo.org",
             "keywords": [
                 "analytics",
+                "matomo",
                 "piwik",
                 "tracker"
             ],
             "support": {
-                "forum": "http://forum.piwik.org/",
-                "issues": "https://github.com/piwik/piwik-php-tracker/issues",
-                "source": "https://github.com/piwik/piwik-php-tracker"
+                "forum": "https://forum.matomo.org/",
+                "issues": "https://github.com/matomo-org/matomo-php-tracker/issues",
+                "source": "https://github.com/matomo-org/matomo-php-tracker"
             },
-            "time": "2019-12-23T21:48:04+00:00"
+            "time": "2021-05-19T11:44:04+00:00"
         },
         {
             "name": "roundcube/plugin-installer",
