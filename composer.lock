@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6c1c6ebb127f3bfc8b154ef6744875b1",
+    "content-hash": "886aed339aeeb5a5cf35b892af0f26b5",
     "packages": [
         {
             "name": "matomo/matomo-php-tracker",

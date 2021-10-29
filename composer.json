@@ -3,7 +3,6 @@
     "description": "Add Matomo tracking server-side code to all requests in Roundcube",
     "type": "roundcube-plugin",
     "license": "GPL-3.0-or-later",
-    "version": "3.0",
     "homepage": "https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin",
     "keywords": ["roundcube", "mail", "matomo", "piwik", "tracking", "analytics"],
     "authors": [
