@@ -1,7 +1,7 @@
 # Matomo Tracking Plugin for Roundcube
 
 [![Continuous integration](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/actions/workflows/ci.yml)
-[![Stable Version](https://img.shields.io/packagist/v/tetsuo13/roundcube_matomo_tracking_api.svg)](https://packagist.org/packages/tetsuo13/roundcube_matomo_tracking_api)
+[![Stable Version](https://img.shields.io/packagist/v/tetsuo13/matomo_tracking_api.svg)](https://packagist.org/packages/tetsuo13/matomo_tracking_api)
 
 This plugin integrates Matomo analytics using the
 [Matomo Tracking API](https://matomo.org/docs/tracking-api/) into Roundcube.
