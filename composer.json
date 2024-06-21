@@ -25,7 +25,11 @@
     "require": {
         "ext-json": "*",
         "matomo/matomo-php-tracker": "^3.0",
-        "php": ">=5.3",
-        "roundcube/plugin-installer": "~0.1"
+        "roundcube/plugin-installer": ">=0.3.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "roundcube/plugin-installer": true
+        }
     }
 }
