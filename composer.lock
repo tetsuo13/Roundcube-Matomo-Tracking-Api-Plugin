@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dd75700f1ee7eeb1e7f83eb6f3093b14",
+    "content-hash": "b353bd3907f0682a0e1215a0793b7625",
     "packages": [
         {
             "name": "matomo/matomo-php-tracker",
@@ -126,9 +126,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-json": "*",
-        "php": ">=5.3"
+        "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
