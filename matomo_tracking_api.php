@@ -6,8 +6,8 @@
  * Adds the PHP Matomo tracking API.
  *
  * @version 3.0.0
- * @author  Andrei Nicholson
- * @url     https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin
+ * @author Andrei Nicholson
+ * @url https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin
  */
 class matomo_tracking_api extends rcube_plugin
 {
