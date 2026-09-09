@@ -4,7 +4,7 @@
 
 - Rename from Piwik to Matomo
 
-## [2.0.0](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/compare/1.0.0...2.0.0) (2016-12-06)
+## [2.0.0](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/compare/1.1.0...2.0.0) (2016-12-06)
 
 ## [1.1.0](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/compare/1.0.5...1.1.0) (2016-11-18)
 
