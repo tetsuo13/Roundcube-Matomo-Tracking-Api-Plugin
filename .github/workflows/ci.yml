@@ -13,7 +13,7 @@ jobs:
         run: composer validate --strict
 
       - name: Install dependencies
-        run: composer install --no-progress --no-suggest
+        run: composer install --no-progress --no-interaction
 
       - name: Tests
         run: >-
