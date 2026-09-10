@@ -15,3 +15,11 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress --no-suggest
 
+      - name: Tests
+        run: >-
+          vendor/bin/phpunit
+          --fail-on-warning
+          --fail-on-risky
+          --display-deprecations
+          tests/*
+

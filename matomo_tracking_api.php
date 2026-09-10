@@ -1,11 +1,12 @@
 <?php
 
+require_once __DIR__ . '/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
+
 /**
  * Matomo Tracking API.
  *
  * Adds the PHP Matomo tracking API.
  *
- * @version 3.0.0
  * @author Andrei Nicholson
  * @url https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin
  */
@@ -16,8 +17,6 @@ class matomo_tracking_api extends rcube_plugin
      */
     public function init()
     {
-        require_once dirname(__FILE__) . '/MatomoTracker.php';
-
         $rcmail = rcmail::get_instance();
 
         $this->load_config();
