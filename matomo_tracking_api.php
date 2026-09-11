@@ -44,8 +44,8 @@ class matomo_tracking_api extends rcube_plugin
             $this->tracker = new MatomoTracker($siteId);
         }
 
-        # Done this roundabout way instead of `MatomoTracker::$URL` because
-        # unit tests may inject test stubs.
+        // Done this roundabout way instead of `MatomoTracker::$URL` because
+        // unit tests may inject test stubs.
         $trackerClass = get_class($this->tracker);
         $trackerClass::$URL = $trackingUrl;
 
@@ -109,6 +109,7 @@ class matomo_tracking_api extends rcube_plugin
         $trackingUrl = $rcmail->config->get('matomo_tracking_api_url', null);
 
         if ($trackingUrl === null) {
+            // TODO: Move this and other instances to a single private function instead
             rcmail::raise_error(
                 array(
                     'code' => 2,
