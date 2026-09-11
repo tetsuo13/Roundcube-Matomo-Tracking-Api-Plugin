@@ -12,6 +12,13 @@ require_once __DIR__ . '/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
  */
 class matomo_tracking_api extends rcube_plugin
 {
+    private ?MatomoTracker $tracker = null;
+
+    public function setTracker(MatomoTracker $tracker): void
+    {
+        $this->tracker = $tracker;
+    }
+
     /**
      * Entry point for plugin. Track on all events.
      */
@@ -27,20 +34,25 @@ class matomo_tracking_api extends rcube_plugin
             return;
         }
 
-        MatomoTracker::$URL = $trackingUrl;
-
         $siteId = $this->getSiteId($rcmail);
 
         if ($siteId === false) {
             return;
         }
 
-        $tracker = new MatomoTracker($siteId);
+        if ($this->tracker === null) {
+            $this->tracker = new MatomoTracker($siteId);
+        }
+
+        # Done this roundabout way instead of `MatomoTracker::$URL` because
+        # unit tests may inject test stubs.
+        $trackerClass = get_class($this->tracker);
+        $trackerClass::$URL = $trackingUrl;
 
         $tokenAuth = $rcmail->config->get('matomo_tracking_api_token_auth', null);
 
         if ($tokenAuth !== null) {
-            $tracker->setTokenAuth($tokenAuth);
+            $this->tracker->setTokenAuth($tokenAuth);
         }
 
         $trackUserId = $rcmail->config->get('matomo_tracking_api_track_user_id', false);
@@ -50,29 +62,29 @@ class matomo_tracking_api extends rcube_plugin
             $userEmail = $rcmail->get_user_email();
 
             if ($userEmail !== false) {
-                $tracker->setUserId($userEmail);
+                $this->tracker->setUserId($userEmail);
             }
         }
 
         if ($this->gset('HTTP_USER_AGENT')) {
-            $tracker->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+            $this->tracker->setUserAgent($_SERVER['HTTP_USER_AGENT']);
         }
 
         $url = ($this->gset('HTTPS') && $_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://')
              . $_SERVER['SERVER_NAME']
              . $_SERVER['REQUEST_URI'];
 
-        $tracker->setUrl($url);
+        $this->tracker->setUrl($url);
 
         if ($this->gset('HTTP_REFERER')) {
-            $tracker->setUrlReferer($_SERVER['HTTP_REFERER']);
+            $this->tracker->setUrlReferer($_SERVER['HTTP_REFERER']);
         }
 
         if ($tokenAuth !== null && $this->gset('REMOTE_ADDR')) {
-            $tracker->setIp($_SERVER['REMOTE_ADDR']);
+            $this->tracker->setIp($_SERVER['REMOTE_ADDR']);
         }
 
-        $tracker->doTrackPageView('');
+        $this->tracker->doTrackPageView('');
     }
 
     /**
