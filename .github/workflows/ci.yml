@@ -7,11 +7,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
 
-    - name: Install dependencies
-      run: composer install --no-progress --no-suggest
+      - name: Install dependencies
+        run: composer install --no-progress --no-interaction
+
+      - name: Tests
+        run: >-
+          vendor/bin/phpunit
+          --fail-on-warning
+          --fail-on-risky
+          --display-deprecations
+          tests/*Test.php
 
