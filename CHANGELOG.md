@@ -2,7 +2,8 @@
 
 ## [Unreleased](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/compare/2.0.0...main)
 
-- Rename from Piwik to Matomo
+- Renamed from Piwik to Matomo.
+- Removed bundled matomo-php-tracker in favor of using Composer.
 
 ## [2.0.0](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/compare/1.1.0...2.0.0) (2016-12-06)
 
