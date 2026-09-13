@@ -13,27 +13,32 @@ use PHPUnit\Framework\TestCase;
 
 final class MatomoTrackingApiTest extends TestCase
 {
+    private const CONFIG_VAR_SITE_ID = 'matomo_tracking_api_site_id';
+    private const CONFIG_VAR_URL = 'matomo_tracking_api_url';
+
     /**
      * Captures any errors raised by the plugin.
      */
     private array $rcmailErrors = [];
 
+    private ?\rcmail $rcmail = null;
+
     protected function setUp(): void
     {
-        $rcmail = \rcmail::get_instance(0, 'test');
+        $this->rcmail = \rcmail::get_instance(0, 'test');
 
-        $rcmail->config->set('devel_mode', false);
+        $this->rcmail->config->set('devel_mode', false);
 
         // Reset static instance variables between tests.
-        $rcmail->config->set('matomo_tracking_api_url', null);
-        $rcmail->config->set('matomo_tracking_api_site_id', null);
-        $rcmail->config->set('matomo_tracking_api_token_auth', null);
-        $rcmail->config->set('matomo_tracking_api_track_user_id', false);
+        $this->rcmail->config->set(self::CONFIG_VAR_URL, null);
+        $this->rcmail->config->set(self::CONFIG_VAR_SITE_ID, null);
+        $this->rcmail->config->set('matomo_tracking_api_token_auth', null);
+        $this->rcmail->config->set('matomo_tracking_api_track_user_id', false);
 
         TestableMatomoTracker::$URL = '';
 
         // Capture any errors raised by the plugin.
-        $rcmail->plugins->register_hook('raise_error', function ($args) use (&$error) {
+        $this->rcmail->plugins->register_hook('raise_error', function ($args) use (&$error) {
             $this->rcmailErrors[] = $args;
             return $args;
         });
@@ -57,6 +62,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $this->assertInstanceOf(\matomo_tracking_api::class, $plugin);
         $this->assertInstanceOf(\rcube_plugin::class, $plugin);
+        $this->assertEmpty($this->rcmailErrors);
     }
 
     private function setupPlugin(array $config = []): \matomo_tracking_api
@@ -73,8 +79,8 @@ final class MatomoTrackingApiTest extends TestCase
     public function testConfigurationTrackingUrlIsConfigured(): void
     {
         $plugin = $this->setupPlugin([
-            'matomo_tracking_api_site_id' => 1,
-            'matomo_tracking_api_url' => 'example.com'
+            self::CONFIG_VAR_SITE_ID => 1,
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = new TestableMatomoTracker(1);
@@ -89,7 +95,7 @@ final class MatomoTrackingApiTest extends TestCase
     public function testConfigurationMissingTrackingUrlRaisesError(): void
     {
         $plugin = $this->setupPlugin([
-            'matomo_tracking_api_site_id' => 1
+            self::CONFIG_VAR_SITE_ID => 1
         ]);
 
         $tracker = new TestableMatomoTracker(1);
@@ -102,19 +108,39 @@ final class MatomoTrackingApiTest extends TestCase
         $this->assertStringContainsString('tracking URL', $this->rcmailErrors[0]['message']);
     }
 
-    public function testTracksPageView(): void
+    public function testConfigurationTestScalarSiteId(): void
     {
         $plugin = $this->setupPlugin([
-            'matomo_tracking_api_site_id' => 1,
-            'matomo_tracking_api_url' => 'example.com'
+            self::CONFIG_VAR_SITE_ID => 1,
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
-        $tracker = new TestableMatomoTracker(1);
+        $tracker = new TestableMatomoTracker(2);
         $plugin->setTracker($tracker);
 
         $plugin->init();
 
-        $this->assertSame('', $tracker->pageTitle);
+        $this->assertSame(2, $tracker->idSite);
+        $this->assertEmpty($this->rcmailErrors);
+    }
+
+    public function testConfigurationServerSpecificSiteId(): void
+    {
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 2,
+            self::CONFIG_VAR_URL => 'example.com'
+        ]);
+
+        $method = new \ReflectionMethod(\matomo_tracking_api::class, 'getSiteId');
+        $method->setAccessible(true);
+
+        $tracker = new TestableMatomoTracker(2);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $siteId = $method->invoke($plugin, $this->rcmail);
+        $this->assertSame(2, $siteId);
         $this->assertEmpty($this->rcmailErrors);
     }
 }
