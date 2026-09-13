@@ -143,5 +143,43 @@ final class MatomoTrackingApiTest extends TestCase
         $this->assertSame(2, $siteId);
         $this->assertEmpty($this->rcmailErrors);
     }
+
+    public function testConfigurationMissingSiteIdRaisesError(): void
+    {
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_URL => 'example.com'
+        ]);
+
+        $method = new \ReflectionMethod(\matomo_tracking_api::class, 'getSiteId');
+        $method->setAccessible(true);
+
+        $tracker = new TestableMatomoTracker(2);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $siteId = $method->invoke($plugin, $this->rcmail);
+        $this->assertSame(false, $siteId);
+        $this->assertNotEmpty($this->rcmailErrors);
+    }
+
+    public function testConfigurationUnknownServerRaisesError(): void
+    {
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => [
+                'test.example.com' => 42,
+                'foo.example.com' => 81
+            ],
+            self::CONFIG_VAR_URL => __FUNCTION__ . '.com'
+        ]);
+
+        $tracker = new TestableMatomoTracker(2);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertNotEmpty($this->rcmailErrors);
+        $this->assertSame(4, $this->rcmailErrors[0]['code']);
+    }
 }
 
