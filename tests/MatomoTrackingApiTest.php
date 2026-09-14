@@ -87,7 +87,7 @@ final class MatomoTrackingApiTest extends TestCase
     {
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 1,
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(1);
@@ -102,7 +102,7 @@ final class MatomoTrackingApiTest extends TestCase
     public function testConfigurationMissingTrackingUrlRaisesError(): void
     {
         $plugin = $this->setupPlugin([
-            self::CONFIG_VAR_SITE_ID => 1,
+            self::CONFIG_VAR_SITE_ID => 1
         ]);
 
         $tracker = $this->createTracker(1);
@@ -123,7 +123,7 @@ final class MatomoTrackingApiTest extends TestCase
     {
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(42);
@@ -142,9 +142,9 @@ final class MatomoTrackingApiTest extends TestCase
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => [
                 'test.example.com' => 42,
-                'foo.example.com' => 81,
+                'foo.example.com' => 81
             ],
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(42);
@@ -163,9 +163,9 @@ final class MatomoTrackingApiTest extends TestCase
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => [
                 'test.example.com' => 42,
-                'foo.example.com' => 81,
+                'foo.example.com' => 81
             ],
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(81);
@@ -180,7 +180,7 @@ final class MatomoTrackingApiTest extends TestCase
     public function testConfigurationMissingSiteIdRaisesError(): void
     {
         $plugin = $this->setupPlugin([
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(1);
@@ -204,9 +204,9 @@ final class MatomoTrackingApiTest extends TestCase
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => [
                 'test.example.com' => 42,
-                'foo.example.com' => 81,
+                'foo.example.com' => 81
             ],
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(1);
@@ -226,7 +226,7 @@ final class MatomoTrackingApiTest extends TestCase
     {
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(42);
@@ -244,7 +244,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
-            self::CONFIG_VAR_URL => 'https://matomo.example.com',
+            self::CONFIG_VAR_URL => 'https://matomo.example.com'
         ]);
 
         $tracker = $this->createTracker(42);
@@ -266,7 +266,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
-            self::CONFIG_VAR_URL => 'https://matomo.example.com',
+            self::CONFIG_VAR_URL => 'https://matomo.example.com'
         ]);
 
         $tracker = $this->createTracker(42);
@@ -286,7 +286,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(42);
@@ -303,7 +303,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(42);
@@ -320,7 +320,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(42);
@@ -340,7 +340,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(42);
@@ -356,7 +356,7 @@ final class MatomoTrackingApiTest extends TestCase
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
             self::CONFIG_VAR_URL => 'example.com',
-            self::CONFIG_VAR_TOKEN_AUTH => 'test-token',
+            self::CONFIG_VAR_TOKEN_AUTH => __FUNCTION__
         ]);
 
         $tracker = $this->createTracker(42);
@@ -364,14 +364,14 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin->init();
 
-        $this->assertSame('test-token', $tracker->token_auth);
+        $this->assertSame(__FUNCTION__, $tracker->token_auth);
     }
 
     public function testTrackingWithoutTokenAuthentication(): void
     {
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(42);
@@ -389,7 +389,7 @@ final class MatomoTrackingApiTest extends TestCase
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
             self::CONFIG_VAR_URL => 'example.com',
-            self::CONFIG_VAR_TRACK_USER_ID => 'test-token',
+            self::CONFIG_VAR_TRACK_USER_ID => __FUNCTION__
         ]);
 
         $tracker = $this->createTracker(42);
@@ -406,7 +406,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
-            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_URL => 'example.com'
         ]);
 
         $tracker = $this->createTracker(42);
