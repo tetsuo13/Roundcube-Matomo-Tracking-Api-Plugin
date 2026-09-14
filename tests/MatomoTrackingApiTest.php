@@ -15,6 +15,8 @@ final class MatomoTrackingApiTest extends TestCase
 {
     private const CONFIG_VAR_SITE_ID = 'matomo_tracking_api_site_id';
     private const CONFIG_VAR_URL = 'matomo_tracking_api_url';
+    private const CONFIG_VAR_TOKEN_AUTH = 'matomo_tracking_api_token_auth';
+    private const CONFIG_VAR_TRACK_USER_ID = 'matomo_tracking_api_track_user_id';
 
     /**
      * Captures any errors raised by the plugin.
@@ -32,8 +34,8 @@ final class MatomoTrackingApiTest extends TestCase
         // Reset static instance variables between tests.
         $this->rcmail->config->set(self::CONFIG_VAR_URL, null);
         $this->rcmail->config->set(self::CONFIG_VAR_SITE_ID, null);
-        $this->rcmail->config->set('matomo_tracking_api_token_auth', null);
-        $this->rcmail->config->set('matomo_tracking_api_track_user_id', false);
+        $this->rcmail->config->set(self::CONFIG_VAR_TOKEN_AUTH, null);
+        $this->rcmail->config->set(self::CONFIG_VAR_TRACK_USER_ID, false);
 
         TestableMatomoTracker::$URL = '';
 
@@ -76,14 +78,19 @@ final class MatomoTrackingApiTest extends TestCase
         return new \matomo_tracking_api($rcube->plugins);
     }
 
+    private function createTracker(int $siteId): TestableMatomoTracker
+    {
+        return new TestableMatomoTracker($siteId);
+    }
+
     public function testConfigurationTrackingUrlIsConfigured(): void
     {
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 1,
-            self::CONFIG_VAR_URL => 'example.com'
+            self::CONFIG_VAR_URL => 'example.com',
         ]);
 
-        $tracker = new TestableMatomoTracker(1);
+        $tracker = $this->createTracker(1);
         $plugin->setTracker($tracker);
 
         $plugin->init();
@@ -95,91 +102,320 @@ final class MatomoTrackingApiTest extends TestCase
     public function testConfigurationMissingTrackingUrlRaisesError(): void
     {
         $plugin = $this->setupPlugin([
-            self::CONFIG_VAR_SITE_ID => 1
+            self::CONFIG_VAR_SITE_ID => 1,
         ]);
 
-        $tracker = new TestableMatomoTracker(1);
+        $tracker = $this->createTracker(1);
         $plugin->setTracker($tracker);
 
         $plugin->init();
 
         $this->assertSame('', TestableMatomoTracker::$URL);
         $this->assertCount(1, $this->rcmailErrors);
-        $this->assertStringContainsString('tracking URL', $this->rcmailErrors[0]['message']);
+        $this->assertSame(2, $this->rcmailErrors[0]['code']);
+        $this->assertStringContainsString(
+            'tracking URL',
+            $this->rcmailErrors[0]['message']
+        );
     }
 
-    public function testConfigurationTestScalarSiteId(): void
+    public function testConfigurationScalarSiteId(): void
     {
         $plugin = $this->setupPlugin([
-            self::CONFIG_VAR_SITE_ID => 1,
-            self::CONFIG_VAR_URL => 'example.com'
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
         ]);
 
-        $tracker = new TestableMatomoTracker(2);
+        $tracker = $this->createTracker(42);
         $plugin->setTracker($tracker);
 
         $plugin->init();
 
-        $this->assertSame(2, $tracker->idSite);
+        $this->assertSame(42, $tracker->idSite);
         $this->assertEmpty($this->rcmailErrors);
     }
 
     public function testConfigurationServerSpecificSiteId(): void
     {
+        $_SERVER['SERVER_NAME'] = 'test.example.com';
+
         $plugin = $this->setupPlugin([
-            self::CONFIG_VAR_SITE_ID => 2,
-            self::CONFIG_VAR_URL => 'example.com'
+            self::CONFIG_VAR_SITE_ID => [
+                'test.example.com' => 42,
+                'foo.example.com' => 81,
+            ],
+            self::CONFIG_VAR_URL => 'example.com',
         ]);
 
-        $method = new \ReflectionMethod(\matomo_tracking_api::class, 'getSiteId');
-        $method->setAccessible(true);
-
-        $tracker = new TestableMatomoTracker(2);
+        $tracker = $this->createTracker(42);
         $plugin->setTracker($tracker);
 
         $plugin->init();
 
-        $siteId = $method->invoke($plugin, $this->rcmail);
-        $this->assertSame(2, $siteId);
+        $this->assertSame(42, $tracker->idSite);
+        $this->assertEmpty($this->rcmailErrors);
+    }
+
+    public function testConfigurationServerSpecificSiteIdSelectsCorrectServer(): void
+    {
+        $_SERVER['SERVER_NAME'] = 'foo.example.com';
+
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => [
+                'test.example.com' => 42,
+                'foo.example.com' => 81,
+            ],
+            self::CONFIG_VAR_URL => 'example.com',
+        ]);
+
+        $tracker = $this->createTracker(81);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertSame(81, $tracker->idSite);
         $this->assertEmpty($this->rcmailErrors);
     }
 
     public function testConfigurationMissingSiteIdRaisesError(): void
     {
         $plugin = $this->setupPlugin([
-            self::CONFIG_VAR_URL => 'example.com'
+            self::CONFIG_VAR_URL => 'example.com',
         ]);
 
-        $method = new \ReflectionMethod(\matomo_tracking_api::class, 'getSiteId');
-        $method->setAccessible(true);
-
-        $tracker = new TestableMatomoTracker(2);
+        $tracker = $this->createTracker(1);
         $plugin->setTracker($tracker);
 
         $plugin->init();
 
-        $siteId = $method->invoke($plugin, $this->rcmail);
-        $this->assertSame(false, $siteId);
-        $this->assertNotEmpty($this->rcmailErrors);
+        $this->assertSame('', TestableMatomoTracker::$URL);
+        $this->assertCount(1, $this->rcmailErrors);
+        $this->assertSame(3, $this->rcmailErrors[0]['code']);
+        $this->assertStringContainsString(
+            'site ID',
+            $this->rcmailErrors[0]['message']
+        );
     }
 
     public function testConfigurationUnknownServerRaisesError(): void
     {
+        $_SERVER['SERVER_NAME'] = 'unknown.example.com';
+
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => [
                 'test.example.com' => 42,
-                'foo.example.com' => 81
+                'foo.example.com' => 81,
             ],
-            self::CONFIG_VAR_URL => __FUNCTION__ . '.com'
+            self::CONFIG_VAR_URL => 'example.com',
         ]);
 
-        $tracker = new TestableMatomoTracker(2);
+        $tracker = $this->createTracker(1);
         $plugin->setTracker($tracker);
 
         $plugin->init();
 
-        $this->assertNotEmpty($this->rcmailErrors);
+        $this->assertCount(1, $this->rcmailErrors);
         $this->assertSame(4, $this->rcmailErrors[0]['code']);
+        $this->assertStringContainsString(
+            'unknown.example.com',
+            $this->rcmailErrors[0]['message']
+        );
+    }
+
+    public function testTrackingPageTitle(): void
+    {
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertSame('', $tracker->pageTitle);
+    }
+
+    public function testTrackingUrlUsesHttp(): void
+    {
+        $_SERVER['SERVER_NAME'] = 'webmail.example.com';
+        $_SERVER['REQUEST_URI'] = '/?_task=mail&_action=list';
+
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'https://matomo.example.com',
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertSame(
+            'http://webmail.example.com/?_task=mail&_action=list',
+            $tracker->trackedUrl
+        );
+    }
+
+    public function testTrackingUrlUsesHttps(): void
+    {
+        $_SERVER['HTTPS'] = 'on';
+        $_SERVER['SERVER_NAME'] = 'webmail.example.com';
+        $_SERVER['REQUEST_URI'] = '/?_task=mail&_action=list';
+
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'https://matomo.example.com',
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertSame(
+            'https://webmail.example.com/?_task=mail&_action=list',
+            $tracker->trackedUrl
+        );
+    }
+
+    public function testTrackingUserAgent(): void
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Test User Agent';
+
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertSame('Test User Agent', $tracker->userAgent);
+    }
+
+    public function testTrackingWithoutUserAgent(): void
+    {
+        unset($_SERVER['HTTP_USER_AGENT']);
+
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertFalse($tracker->userAgent);
+    }
+
+    public function testTrackingReferer(): void
+    {
+        $_SERVER['HTTP_REFERER'] = 'https://example.com/inbox';
+
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertSame(
+            'https://example.com/inbox',
+            $tracker->urlReferrer
+        );
+    }
+
+    public function testTrackingWithoutReferer(): void
+    {
+        unset($_SERVER['HTTP_REFERER']);
+
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertFalse($tracker->urlReferrer);
+    }
+
+    public function testTrackingTokenAuthentication(): void
+    {
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_TOKEN_AUTH => 'test-token',
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertSame('test-token', $tracker->token_auth);
+    }
+
+    public function testTrackingWithoutTokenAuthentication(): void
+    {
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertFalse($tracker->token_auth);
+    }
+
+    public function testTrackingIpWithTokenAuthentication(): void
+    {
+        $_SERVER['REMOTE_ADDR'] = '192.0.2.123';
+
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_TRACK_USER_ID => 'test-token',
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertSame('192.0.2.123', $tracker->ip);
+    }
+
+    public function testTrackingSetsIpWithoutTokenAuthentication(): void
+    {
+        $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
+
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        $this->assertFalse($tracker->token_auth);
+        $this->assertSame('1.2.3.4', $tracker->ip);
     }
 }
 

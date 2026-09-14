@@ -9,10 +9,17 @@ require_once __DIR__ . '/../vendor/matomo/matomo-php-tracker/MatomoTracker.php';
 final class TestableMatomoTracker extends \MatomoTracker
 {
     public ?string $pageTitle = null;
+    public ?string $trackedUrl = null;
 
-    public function doTrackPageView($pageTitle)
+    public function doTrackPageView(string $pageTitle)
     {
         $this->pageTitle = $pageTitle;
+    }
+
+    public function setUrl(string $url): self
+    {
+        $this->trackedUrl = $url;
+        return parent::setUrl($url);
     }
 }
 
