@@ -12,9 +12,15 @@ require_once __DIR__ . '/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
  */
 class matomo_tracking_api extends rcube_plugin
 {
-    private ?MatomoTracker $tracker = null;
+    private $tracker = null;
 
-    public function setTracker(MatomoTracker $tracker): void
+    /**
+     * Call prior to {@see init()} to inject a custom tracker. Intended for
+     * unit tests. Tracker must have same API as {@see MatomoTracker}.
+     *
+     * @param MatomoTracker $tracker Custom MatomoTracker instance.
+     */
+    public function setTracker($tracker)
     {
         $this->tracker = $tracker;
     }
