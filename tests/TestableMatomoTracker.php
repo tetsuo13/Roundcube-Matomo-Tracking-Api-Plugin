@@ -11,7 +11,7 @@ final class TestableMatomoTracker extends \MatomoTracker
     public ?string $pageTitle = null;
     public ?string $trackedUrl = null;
 
-    public function doTrackPageView(string $pageTitle)
+    public function doTrackPageView(string $pageTitle): void
     {
         $this->pageTitle = $pageTitle;
     }
