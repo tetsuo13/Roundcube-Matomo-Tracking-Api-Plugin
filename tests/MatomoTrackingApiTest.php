@@ -382,9 +382,95 @@ final class MatomoTrackingApiTest extends TestCase
         $this->assertFalse($tracker->token_auth);
     }
 
+    private function setupRoundcubeWebmailMock(
+        ?string $userEmail,
+        bool $trackUserIdEnabled
+    ): \rcmail {
+        $rcmail = $this->createMock(\rcmail::class);
+
+        $times = 1;
+
+        if ($userEmail === null || $trackUserIdEnabled === false) {
+            $times = 0;
+        }
+
+        $rcmail->expects($this->exactly($times))
+            ->method('get_user_email')
+            ->willReturn($userEmail);
+
+        $config = $this->createMock(\rcube_config::class);
+
+        $config->method('get')
+            ->willReturnMap([
+                [self::CONFIG_VAR_URL, null, 'example.com'],
+                [self::CONFIG_VAR_SITE_ID, null, 42],
+                [self::CONFIG_VAR_TRACK_USER_ID, false, $trackUserIdEnabled]
+            ]);
+
+        $rcmail->config = $config;
+
+        return $rcmail;
+    }
+
+    public function testTrackingUserIdWithTokenAuthentication(): void
+    {
+        $expectedUserId = 'foo@example.com';
+
+        $rcmail = $this->setupRoundcubeWebmailMock($expectedUserId, true);
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_TRACK_USER_ID => true
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+        $plugin->setRoundcubeWebmail($rcmail);
+
+        $plugin->init();
+
+        $this->assertSame($expectedUserId, $tracker->userId);
+    }
+
+    public function testNotTrackingUserIdWithTokenAuthenticationWhenNull(): void
+    {
+        $rcmail = $this->setupRoundcubeWebmailMock(null, true);
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_TRACK_USER_ID => true
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+        $plugin->setRoundcubeWebmail(null);
+
+        $plugin->init();
+
+        $this->assertFalse($tracker->userId);
+    }
+
+    public function testNotTrackingUserIdWithoutTokenAuthentication(): void
+    {
+        $rcmail = $this->setupRoundcubeWebmailMock('foo@example.com', false);
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42,
+            self::CONFIG_VAR_URL => 'example.com',
+            self::CONFIG_VAR_TRACK_USER_ID => true
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+        $plugin->setRoundcubeWebmail(null);
+
+        $plugin->init();
+
+        $this->assertFalse($tracker->userId);
+    }
+
     public function testTrackingIpWithTokenAuthentication(): void
     {
-        $_SERVER['REMOTE_ADDR'] = '192.0.2.123';
+        $_SERVER['REMOTE_ADDR'] = '2.3.4.5';
 
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
@@ -397,7 +483,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin->init();
 
-        $this->assertSame('192.0.2.123', $tracker->ip);
+        $this->assertSame('2.3.4.5', $tracker->ip);
     }
 
     public function testTrackingSetsIpWithoutTokenAuthentication(): void

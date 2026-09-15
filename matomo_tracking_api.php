@@ -13,6 +13,7 @@ require_once __DIR__ . '/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
 class matomo_tracking_api extends rcube_plugin
 {
     private $tracker = null;
+    private $rcmail = null;
 
     /**
      * Call prior to {@see init()} to inject a custom tracker. Intended for
@@ -26,21 +27,34 @@ class matomo_tracking_api extends rcube_plugin
     }
 
     /**
+     * Call prior to {@see init()} to inject a custom rcmail instance.
+     * Intended for unit tests.
+     *
+     * @param rcmail $rcmail Roundcube webmail instance.
+     */
+    public function setRoundcubeWebmail($rcmail)
+    {
+        $this->rcmail = $rcmail;
+    }
+
+    /**
      * Entry point for plugin. Track on all events.
      */
     public function init()
     {
-        $rcmail = rcmail::get_instance();
+        if ($this->rcmail === null) {
+            $this->rcmail = rcmail::get_instance();
+        }
 
         $this->load_config();
 
-        $trackingUrl = $this->getTrackingUrl($rcmail);
+        $trackingUrl = $this->getTrackingUrl();
 
         if ($trackingUrl === false) {
             return;
         }
 
-        $siteId = $this->getSiteId($rcmail);
+        $siteId = $this->getSiteId();
 
         if ($siteId === false) {
             return;
@@ -55,19 +69,19 @@ class matomo_tracking_api extends rcube_plugin
         $trackerClass = get_class($this->tracker);
         $trackerClass::$URL = $trackingUrl;
 
-        $tokenAuth = $rcmail->config->get('matomo_tracking_api_token_auth', null);
+        $tokenAuth = $this->rcmail->config->get('matomo_tracking_api_token_auth', null);
 
         if ($tokenAuth !== null) {
             $this->tracker->setTokenAuth($tokenAuth);
         }
 
-        $trackUserId = $rcmail->config->get('matomo_tracking_api_track_user_id', false);
+        $trackUserId = $this->rcmail->config->get('matomo_tracking_api_track_user_id', false);
 
         if ($trackUserId === true) {
-            // Unauthenticated users will return false.
-            $userEmail = $rcmail->get_user_email();
+            // Unauthenticated users will return null.
+            $userEmail = $this->rcmail->get_user_email();
 
-            if ($userEmail !== false) {
+            if ($userEmail !== null) {
                 $this->tracker->setUserId($userEmail);
             }
         }
@@ -107,12 +121,11 @@ class matomo_tracking_api extends rcube_plugin
     /**
      * Get the required Matomo tracking URL from config.
      *
-     * @param rcube $rcmail Roundcube object.
      * @return string Tracking URL.
      */
-    private function getTrackingUrl(rcube $rcmail)
+    private function getTrackingUrl()
     {
-        $trackingUrl = $rcmail->config->get('matomo_tracking_api_url', null);
+        $trackingUrl = $this->rcmail->config->get('matomo_tracking_api_url', null);
 
         if ($trackingUrl === null) {
             // TODO: Move this and other instances to a single private function instead
@@ -136,12 +149,11 @@ class matomo_tracking_api extends rcube_plugin
     /**
      * Get the required Matomo site ID from config.
      *
-     * @param rcmail $rcmail Roundcube object.
      * @return int Site ID.
      */
-    private function getSiteId(rcmail $rcmail)
+    private function getSiteId()
     {
-        $siteId = $rcmail->config->get('matomo_tracking_api_site_id', null);
+        $siteId = $this->rcmail->config->get('matomo_tracking_api_site_id', null);
 
         if ($siteId === null) {
             rcmail::raise_error(
