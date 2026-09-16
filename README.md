@@ -4,7 +4,7 @@
 [![Stable Version](https://img.shields.io/packagist/v/tetsuo13/matomo_tracking_api.svg)](https://packagist.org/packages/tetsuo13/matomo_tracking_api)
 
 This plugin integrates Matomo analytics using the
-[Matomo Tracking API](https://matomo.org/docs/tracking-api/) into Roundcube.
+[Matomo Tracking API](https://matomo.org/guide/apis/tracking-api/) into Roundcube.
 This plugin is very different from the
 [Roundcube Webmail piwik analytics plugin](https://blog.no-panic.at/projects/roundcube-webmail-piwik-analytics-plugin/)
 which adds the client-side
@@ -61,7 +61,7 @@ $rcmail_config['matomo_tracking_api_site_id'] = array(
 
 When enabled, the user's email address will be used to connect multiple
 devices and browsers. See
-[Benefits of User ID](https://matomo.org/docs/user-id/#benefits-of-enabling-user-id-tracking)
+[Benefits of User ID tracking](https://matomo.org/faq/reports/benefits-of-user-id-tracking/)
 at Matomo's User Guide for more information.
 
 **matomo_tracking_api_token_auth** [string] _(Optional)_

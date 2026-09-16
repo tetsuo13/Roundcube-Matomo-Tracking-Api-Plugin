@@ -4,7 +4,14 @@
     "type": "roundcube-plugin",
     "license": "GPL-3.0-or-later",
     "homepage": "https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin",
-    "keywords": ["roundcube", "mail", "matomo", "piwik", "tracking", "analytics"],
+    "keywords": [
+        "roundcube",
+        "mail",
+        "matomo",
+        "piwik",
+        "tracking",
+        "analytics"
+    ],
     "authors": [
         {
             "name": "Andrei Nicholson",
@@ -23,7 +30,6 @@
         }
     ],
     "require": {
-        "ext-json": "*",
         "matomo/matomo-php-tracker": "^4.0",
         "roundcube/plugin-installer": "^0.3"
     },
@@ -31,5 +37,8 @@
         "allow-plugins": {
             "roundcube/plugin-installer": true
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.5"
     }
 }
