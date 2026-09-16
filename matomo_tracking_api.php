@@ -1,79 +1,110 @@
 <?php
 
+require_once __DIR__ . '/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
+
 /**
  * Matomo Tracking API.
  *
  * Adds the PHP Matomo tracking API.
  *
- * @version 3.0.0
- * @author  Andrei Nicholson
- * @url     https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin
+ * @author Andrei Nicholson
+ * @url https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin
  */
 class matomo_tracking_api extends rcube_plugin
 {
+    private $tracker = null;
+    private $rcmail = null;
+
+    /**
+     * Call prior to {@see init()} to inject a custom tracker. Intended for
+     * unit tests. Tracker must have same API as {@see MatomoTracker}.
+     *
+     * @param MatomoTracker $tracker Custom MatomoTracker instance.
+     */
+    public function setTracker($tracker)
+    {
+        $this->tracker = $tracker;
+    }
+
+    /**
+     * Call prior to {@see init()} to inject a custom rcmail instance.
+     * Intended for unit tests.
+     *
+     * @param rcmail $rcmail Roundcube webmail instance.
+     */
+    public function setRoundcubeWebmail($rcmail)
+    {
+        $this->rcmail = $rcmail;
+    }
+
     /**
      * Entry point for plugin. Track on all events.
      */
     public function init()
     {
-        require_once dirname(__FILE__) . '/MatomoTracker.php';
-
-        $rcmail = rcmail::get_instance();
+        if ($this->rcmail === null) {
+            $this->rcmail = rcmail::get_instance();
+        }
 
         $this->load_config();
 
-        $trackingUrl = $this->getTrackingUrl($rcmail);
+        $trackingUrl = $this->getTrackingUrl();
 
         if ($trackingUrl === false) {
             return;
         }
 
-        MatomoTracker::$URL = $trackingUrl;
-
-        $siteId = $this->getSiteId($rcmail);
+        $siteId = $this->getSiteId();
 
         if ($siteId === false) {
             return;
         }
 
-        $tracker = new MatomoTracker($siteId);
-
-        $tokenAuth = $rcmail->config->get('matomo_tracking_api_token_auth', null);
-
-        if ($tokenAuth !== null) {
-            $tracker->setTokenAuth($tokenAuth);
+        if ($this->tracker === null) {
+            $this->tracker = new MatomoTracker($siteId);
         }
 
-        $trackUserId = $rcmail->config->get('matomo_tracking_api_track_user_id', false);
+        // Done this roundabout way instead of `MatomoTracker::$URL` because
+        // unit tests may inject test stubs.
+        $trackerClass = get_class($this->tracker);
+        $trackerClass::$URL = $trackingUrl;
+
+        $tokenAuth = $this->rcmail->config->get('matomo_tracking_api_token_auth', null);
+
+        if ($tokenAuth !== null) {
+            $this->tracker->setTokenAuth($tokenAuth);
+        }
+
+        $trackUserId = $this->rcmail->config->get('matomo_tracking_api_track_user_id', false);
 
         if ($trackUserId === true) {
-            // Unauthenticated users will return false.
-            $userEmail = $rcmail->get_user_email();
+            // Unauthenticated users will return null.
+            $userEmail = $this->rcmail->get_user_email();
 
-            if ($userEmail !== false) {
-                $tracker->setUserId($userEmail);
+            if ($userEmail !== null) {
+                $this->tracker->setUserId($userEmail);
             }
         }
 
         if ($this->gset('HTTP_USER_AGENT')) {
-            $tracker->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+            $this->tracker->setUserAgent($_SERVER['HTTP_USER_AGENT']);
         }
 
         $url = ($this->gset('HTTPS') && $_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://')
              . $_SERVER['SERVER_NAME']
              . $_SERVER['REQUEST_URI'];
 
-        $tracker->setUrl($url);
+        $this->tracker->setUrl($url);
 
         if ($this->gset('HTTP_REFERER')) {
-            $tracker->setUrlReferer($_SERVER['HTTP_REFERER']);
+            $this->tracker->setUrlReferer($_SERVER['HTTP_REFERER']);
         }
 
         if ($tokenAuth !== null && $this->gset('REMOTE_ADDR')) {
-            $tracker->setIp($_SERVER['REMOTE_ADDR']);
+            $this->tracker->setIp($_SERVER['REMOTE_ADDR']);
         }
 
-        $tracker->doTrackPageView('');
+        $this->tracker->doTrackPageView('');
     }
 
     /**
@@ -90,14 +121,14 @@ class matomo_tracking_api extends rcube_plugin
     /**
      * Get the required Matomo tracking URL from config.
      *
-     * @param rcube $rcmail Roundcube object.
      * @return string Tracking URL.
      */
-    private function getTrackingUrl(rcube $rcmail)
+    private function getTrackingUrl()
     {
-        $trackingUrl = $rcmail->config->get('matomo_tracking_api_url', null);
+        $trackingUrl = $this->rcmail->config->get('matomo_tracking_api_url', null);
 
         if ($trackingUrl === null) {
+            // TODO: Move this and other instances to a single private function instead
             rcmail::raise_error(
                 array(
                     'code' => 2,
@@ -118,12 +149,11 @@ class matomo_tracking_api extends rcube_plugin
     /**
      * Get the required Matomo site ID from config.
      *
-     * @param rcmail $rcmail Roundcube object.
      * @return int Site ID.
      */
-    private function getSiteId(rcmail $rcmail)
+    private function getSiteId()
     {
-        $siteId = $rcmail->config->get('matomo_tracking_api_site_id', null);
+        $siteId = $this->rcmail->config->get('matomo_tracking_api_site_id', null);
 
         if ($siteId === null) {
             rcmail::raise_error(
