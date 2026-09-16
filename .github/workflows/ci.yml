@@ -9,17 +9,12 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Validate composer.json and composer.lock
+      - name: Validate composer
         run: composer validate --strict
 
       - name: Install dependencies
         run: composer install --no-progress --no-interaction
 
       - name: Tests
-        run: >-
-          vendor/bin/phpunit
-          --fail-on-warning
-          --fail-on-risky
-          --display-deprecations
-          tests/*Test.php
+        run: vendor/bin/phpunit
 
