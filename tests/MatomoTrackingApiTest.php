@@ -189,6 +189,7 @@ final class MatomoTrackingApiTest extends TestCase
         $plugin->init();
 
         $this->assertSame('', TestableMatomoTracker::$URL);
+        $this->assertNull($tracker->pageTitle);
         $this->assertCount(1, $this->rcmailErrors);
         $this->assertSame(3, $this->rcmailErrors[0]['code']);
         $this->assertStringContainsString(
@@ -282,7 +283,7 @@ final class MatomoTrackingApiTest extends TestCase
 
     public function testTrackingUserAgent(): void
     {
-        $_SERVER['HTTP_USER_AGENT'] = 'Test User Agent';
+        $_SERVER['HTTP_USER_AGENT'] = __FUNCTION__;
 
         $plugin = $this->setupPlugin([
             self::CONFIG_VAR_SITE_ID => 42,
@@ -294,7 +295,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin->init();
 
-        $this->assertSame('Test User Agent', $tracker->userAgent);
+        $this->assertSame(__FUNCTION__, $tracker->userAgent);
     }
 
     public function testTrackingWithoutUserAgent(): void
