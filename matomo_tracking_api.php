@@ -42,6 +42,12 @@ class matomo_tracking_api extends rcube_plugin
      */
     public function init()
     {
+        // Abort if can't determine the URL. It's not guaranteed that PHP will
+        // supply these server vars.
+        if (!isset($_SERVER['SERVER_NAME'], $_SERVER['REQUEST_URI'])) {
+            return;
+        }
+
         if ($this->rcmail === null) {
             $this->rcmail = rcmail::get_instance();
         }

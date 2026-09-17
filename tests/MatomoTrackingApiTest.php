@@ -9,6 +9,7 @@ require_once __DIR__ . '/../vendor/roundcube/roundcubemail/program/include/inise
 require_once __DIR__ . '/TestableMatomoTracker.php';
 require_once __DIR__ . '/../matomo_tracking_api.php';
 
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 
 final class MatomoTrackingApiTest extends TestCase
@@ -503,6 +504,39 @@ final class MatomoTrackingApiTest extends TestCase
 
         $this->assertFalse($tracker->token_auth);
         $this->assertSame('1.2.3.4', $tracker->ip);
+    }
+
+    #[TestWith([null, '/?_task=mail'])]
+    #[TestWith(['webmail.example.com', null])]
+    #[TestWith([null, null])]
+    public function testInitAbortsWhenServerNameOrRequestUriMissing(
+        ?string $serverName,
+        ?string $requestUri
+    ): void {
+        if ($serverName === null) {
+            unset($_SERVER['SERVER_NAME']);
+        } else {
+            $_SERVER['SERVER_NAME'] = $serverName;
+        }
+
+        if ($requestUri === null) {
+            unset($_SERVER['REQUEST_URI']);
+        } else {
+            $_SERVER['REQUEST_URI'] = $requestUri;
+        }
+
+        // Don't supply tracking URL.
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 42
+        ]);
+
+        $tracker = $this->createTracker(42);
+        $plugin->setTracker($tracker);
+
+        $plugin->init();
+
+        // Should never get to verifying the tracking URL is set.
+        $this->assertEmpty($this->rcmailErrors);
     }
 }
 
