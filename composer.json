@@ -30,7 +30,7 @@
         }
     ],
     "require": {
-        "matomo/matomo-php-tracker": "^3.0",
+        "matomo/matomo-php-tracker": "^4.0",
         "roundcube/plugin-installer": "^0.3"
     },
     "config": {
