@@ -256,7 +256,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $this->assertSame(
             'http://webmail.example.com/?_task=mail&_action=list',
-            $tracker->trackedUrl
+            $tracker->pageUrl
         );
     }
 
@@ -278,7 +278,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $this->assertSame(
             'https://webmail.example.com/?_task=mail&_action=list',
-            $tracker->trackedUrl
+            $tracker->pageUrl
         );
     }
 
@@ -313,7 +313,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin->init();
 
-        $this->assertFalse($tracker->userAgent);
+        $this->assertNull($tracker->userAgent);
     }
 
     public function testTrackingReferer(): void
@@ -350,7 +350,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin->init();
 
-        $this->assertFalse($tracker->urlReferrer);
+        $this->assertNull($tracker->urlReferrer);
     }
 
     public function testTrackingTokenAuthentication(): void
@@ -381,7 +381,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin->init();
 
-        $this->assertFalse($tracker->token_auth);
+        $this->assertNull($tracker->token_auth);
     }
 
     private function setupRoundcubeWebmailMock(
@@ -449,7 +449,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin->init();
 
-        $this->assertFalse($tracker->userId);
+        $this->assertNull($tracker->userId);
     }
 
     public function testNotTrackingUserIdWithoutTokenAuthentication(): void
@@ -467,7 +467,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin->init();
 
-        $this->assertFalse($tracker->userId);
+        $this->assertNull($tracker->userId);
     }
 
     public function testTrackingIpWithTokenAuthentication(): void
@@ -502,7 +502,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $plugin->init();
 
-        $this->assertFalse($tracker->token_auth);
+        $this->assertNull($tracker->token_auth);
         $this->assertSame('1.2.3.4', $tracker->ip);
     }
 
