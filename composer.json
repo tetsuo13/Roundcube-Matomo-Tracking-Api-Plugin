@@ -2,6 +2,7 @@
     "name": "tetsuo13/matomo_tracking_api",
     "description": "Add Matomo tracking server-side code to all requests in Roundcube",
     "type": "roundcube-plugin",
+    "version": "2.0.0",
     "license": "GPL-3.0-or-later",
     "homepage": "https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin",
     "keywords": [
