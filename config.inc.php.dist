@@ -19,7 +19,3 @@ $rcmail_config['matomo_tracking_api_site_id'] = null;
 // Connect together a user's usage data across multiple devices and browsers.
 $rcmail_config['matomo_tracking_api_track_user_id'] = false;
 
-// Optional, tracking request authentication token required to track user IP
-// address.
-$rcmail_config['matomo_tracking_api_token_auth'] = null;
-

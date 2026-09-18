@@ -64,11 +64,3 @@ devices and browsers. See
 [Benefits of User ID tracking](https://matomo.org/faq/reports/benefits-of-user-id-tracking/)
 at Matomo's User Guide for more information.
 
-**matomo_tracking_api_token_auth** [string] _(Optional)_
-
-Set to the token auth key of a Matomo user in order to take advantage of
-advanced tracking. Currently utilizes the following if provided:
-
-* Sets remote IP to that of the user instead of defaulting to the IP of the
-  Roundcube installation.
-

@@ -75,12 +75,6 @@ class matomo_tracking_api extends rcube_plugin
         $trackerClass = get_class($this->tracker);
         $trackerClass::$URL = $trackingUrl;
 
-        $tokenAuth = $this->rcmail->config->get('matomo_tracking_api_token_auth', null);
-
-        if ($tokenAuth !== null) {
-            $this->tracker->setTokenAuth($tokenAuth);
-        }
-
         $trackUserId = $this->rcmail->config->get('matomo_tracking_api_track_user_id', false);
 
         if ($trackUserId === true) {
@@ -104,10 +98,6 @@ class matomo_tracking_api extends rcube_plugin
 
         if ($this->gset('HTTP_REFERER')) {
             $this->tracker->setUrlReferer($_SERVER['HTTP_REFERER']);
-        }
-
-        if ($tokenAuth !== null && $this->gset('REMOTE_ADDR')) {
-            $this->tracker->setIp($_SERVER['REMOTE_ADDR']);
         }
 
         $this->tracker->doTrackPageView('');

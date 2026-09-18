@@ -16,7 +16,6 @@ final class MatomoTrackingApiTest extends TestCase
 {
     private const CONFIG_VAR_SITE_ID = 'matomo_tracking_api_site_id';
     private const CONFIG_VAR_URL = 'matomo_tracking_api_url';
-    private const CONFIG_VAR_TOKEN_AUTH = 'matomo_tracking_api_token_auth';
     private const CONFIG_VAR_TRACK_USER_ID = 'matomo_tracking_api_track_user_id';
 
     /**
@@ -35,7 +34,6 @@ final class MatomoTrackingApiTest extends TestCase
         // Reset static instance variables between tests.
         $this->rcmail->config->set(self::CONFIG_VAR_URL, null);
         $this->rcmail->config->set(self::CONFIG_VAR_SITE_ID, null);
-        $this->rcmail->config->set(self::CONFIG_VAR_TOKEN_AUTH, null);
         $this->rcmail->config->set(self::CONFIG_VAR_TRACK_USER_ID, false);
 
         TestableMatomoTracker::$URL = '';
@@ -353,22 +351,6 @@ final class MatomoTrackingApiTest extends TestCase
         $this->assertNull($tracker->urlReferrer);
     }
 
-    public function testTrackingTokenAuthentication(): void
-    {
-        $plugin = $this->setupPlugin([
-            self::CONFIG_VAR_SITE_ID => 42,
-            self::CONFIG_VAR_URL => 'example.com',
-            self::CONFIG_VAR_TOKEN_AUTH => __FUNCTION__
-        ]);
-
-        $tracker = $this->createTracker(42);
-        $plugin->setTracker($tracker);
-
-        $plugin->init();
-
-        $this->assertSame(__FUNCTION__, $tracker->token_auth);
-    }
-
     public function testTrackingWithoutTokenAuthentication(): void
     {
         $plugin = $this->setupPlugin([
@@ -470,25 +452,7 @@ final class MatomoTrackingApiTest extends TestCase
         $this->assertNull($tracker->userId);
     }
 
-    public function testTrackingIpWithTokenAuthentication(): void
-    {
-        $_SERVER['REMOTE_ADDR'] = '2.3.4.5';
-
-        $plugin = $this->setupPlugin([
-            self::CONFIG_VAR_SITE_ID => 42,
-            self::CONFIG_VAR_URL => 'example.com',
-            self::CONFIG_VAR_TRACK_USER_ID => __FUNCTION__
-        ]);
-
-        $tracker = $this->createTracker(42);
-        $plugin->setTracker($tracker);
-
-        $plugin->init();
-
-        $this->assertSame('2.3.4.5', $tracker->ip);
-    }
-
-    public function testTrackingSetsIpWithoutTokenAuthentication(): void
+    public function testTrackingSetsIp(): void
     {
         $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
 

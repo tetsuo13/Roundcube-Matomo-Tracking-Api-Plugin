@@ -7,6 +7,7 @@
 - Addressed many of the PHP deprecated warnings that were being logged ([#11](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/issues/11))
 - Silently abort if server vars used to determine Roundcube installation URL are missing ([#11](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/issues/11))
 - Changed default 600s request timeout down to 5s ([#18](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/issues/18))
+- Removed unnecessary `matomo_tracking_api_token_auth` config used only for tracking remote IP, it's tracked automatically ([#17](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/issues/17))
 
 ## [2.0.0](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/compare/1.1.0...2.0.0) (2016-12-06)
 
