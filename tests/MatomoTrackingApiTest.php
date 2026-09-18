@@ -113,8 +113,7 @@ final class MatomoTrackingApiTest extends TestCase
 
         $this->assertSame('', TestableMatomoTracker::$URL);
         $this->assertCount(1, $this->rcmailErrors);
-        $this->assertSame(2, $this->rcmailErrors[0]['code']);
-        $this->assertStringContainsString(
+        $this->assertStringContainsStringIgnoringCase(
             'tracking URL',
             $this->rcmailErrors[0]['message']
         );
@@ -192,8 +191,7 @@ final class MatomoTrackingApiTest extends TestCase
         $this->assertSame('', TestableMatomoTracker::$URL);
         $this->assertNull($tracker->pageTitle);
         $this->assertCount(1, $this->rcmailErrors);
-        $this->assertSame(3, $this->rcmailErrors[0]['code']);
-        $this->assertStringContainsString(
+        $this->assertStringContainsStringIgnoringCase(
             'site ID',
             $this->rcmailErrors[0]['message']
         );
@@ -217,8 +215,7 @@ final class MatomoTrackingApiTest extends TestCase
         $plugin->init();
 
         $this->assertCount(1, $this->rcmailErrors);
-        $this->assertSame(4, $this->rcmailErrors[0]['code']);
-        $this->assertStringContainsString(
+        $this->assertStringContainsStringIgnoringCase(
             'unknown.example.com',
             $this->rcmailErrors[0]['message']
         );

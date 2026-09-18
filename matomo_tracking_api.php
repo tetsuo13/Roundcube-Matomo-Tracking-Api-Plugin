@@ -127,25 +127,14 @@ class matomo_tracking_api extends rcube_plugin
     /**
      * Get the required Matomo tracking URL from config.
      *
-     * @return string Tracking URL.
+     * @return string|bool Tracking URL.
      */
     private function getTrackingUrl()
     {
         $trackingUrl = $this->rcmail->config->get('matomo_tracking_api_url', null);
 
         if ($trackingUrl === null) {
-            // TODO: Move this and other instances to a single private function instead
-            rcmail::raise_error(
-                array(
-                    'code' => 2,
-                    'type' => 'php',
-                    'file' => __FILE__,
-                    'line' => __LINE__,
-                    'message' => 'tracking URL is required for the matomo_tracking_api plugin'
-                ),
-                true,
-                false
-            );
+            rcmail::raise_error('Missing tracking URL config var matomo_tracking_api_url', true);
             return false;
         }
 
@@ -155,24 +144,14 @@ class matomo_tracking_api extends rcube_plugin
     /**
      * Get the required Matomo site ID from config.
      *
-     * @return int Site ID.
+     * @return int|bool Site ID.
      */
     private function getSiteId()
     {
         $siteId = $this->rcmail->config->get('matomo_tracking_api_site_id', null);
 
         if ($siteId === null) {
-            rcmail::raise_error(
-                array(
-                    'code' => 3,
-                    'type' => 'php',
-                    'file' => __FILE__,
-                    'line' => __LINE__,
-                    'message' => 'site ID required for the matomo_tracking_api plugin'
-                ),
-                true,
-                false
-            );
+            rcmail::raise_error('Missing site ID config var matomo_tracking_api_site_id', true);
             return false;
         }
 
@@ -185,15 +164,8 @@ class matomo_tracking_api extends rcube_plugin
         }
 
         rcmail::raise_error(
-            array(
-                'code' => 4,
-                'type' => 'php',
-                'file' => __FILE__,
-                'line' => __LINE__,
-                'message' => 'unable to find ' . $_SERVER['SERVER_NAME'] . ' in site ID array for matomo_tracking_api plugin'
-            ),
-            true,
-            false
+            'Unable to find ' . $_SERVER['SERVER_NAME'] . ' in site ID config array matomo_tracking_api_site_id',
+            true
         );
 
         return false;
