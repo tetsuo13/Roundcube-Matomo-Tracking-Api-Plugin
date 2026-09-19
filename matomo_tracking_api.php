@@ -99,11 +99,11 @@ class matomo_tracking_api extends rcube_plugin
         $url = ($this->gset('HTTPS') && $_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://')
              . $_SERVER['SERVER_NAME']
              . $_SERVER['REQUEST_URI'];
-
-        $this->tracker->setUrl($url);
+        $trackingUrl = $this->trimUrlForTracking($url);
+        $this->tracker->setUrl($trackingUrl);
 
         if ($this->gset('HTTP_REFERER')) {
-            $this->tracker->setUrlReferer($_SERVER['HTTP_REFERER']);
+            $this->tracker->setUrlReferer($this->trimUrlForTracking($_SERVER['HTTP_REFERER']));
         }
 
         if ($tokenAuth !== null && $this->gset('REMOTE_ADDR')) {
@@ -111,6 +111,29 @@ class matomo_tracking_api extends rcube_plugin
         }
 
         $this->tracker->doTrackPageView('');
+    }
+
+    /**
+     * Remove any Personally Identifiable Information (PII) from the URL.
+     *
+     * @param string
+     * @return string
+     */
+    private static function trimUrlForTracking($url)
+    {
+        if ($url === '') {
+            return $url;
+        }
+
+        $parts = parse_url($url);
+        parse_str($parts['query'] ?? '', $query);
+
+        $safe = array_intersect_key($query, array_flip(['_task', '_action']));
+
+        $url = $parts['scheme'] . '://' . $parts['host'] . $parts['path']
+             . ($safe ? '?' . http_build_query($safe) : '');
+
+        return $url;
     }
 
     /**
