@@ -9,6 +9,8 @@ require_once __DIR__ . '/../vendor/roundcube/roundcubemail/program/include/inise
 require_once __DIR__ . '/TestableMatomoTracker.php';
 require_once __DIR__ . '/../matomo_tracking_api.php';
 
+use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 
@@ -534,6 +536,64 @@ final class MatomoTrackingApiTest extends TestCase
 
         // Should never get to verifying the tracking URL is set.
         $this->assertEmpty($this->rcmailErrors);
+    }
+
+    public static function urlTrimmingProvider(): Generator
+    {
+        yield ['', ''];
+        yield [
+            'https://example.com/?_task=mail&_action=search&_interval=&_q=alice&_headers=from,subject&_filter=ALL&_scope=base',
+            'https://example.com/?_task=mail&_action=search'
+        ];
+        yield [
+            'https://webmail.todhunter.net/?_task=mail&_action=compose&_id=1055218785c6ff83c75fcd',
+            'https://webmail.todhunter.net/?_task=mail&_action=compose'
+        ];
+        yield [
+            'https://example.com/?_task=mail&_reply_uid=103048&_action=compose',
+            'https://example.com/?_task=mail&_action=compose'
+        ];
+        yield [
+            'https://webmail.leedrei.com/?_task=mail&_search=06ba5642e8f9b838e3bc4e352cf89569&_action=preview',
+            'https://webmail.leedrei.com/?_task=mail&_action=preview'
+        ];
+        yield [
+            'https://webmail.todhunter.net/?_task=addressbook&_action=photo&_email=channah.valkos@ymcagreensboro.org&_error=1',
+            'https://webmail.todhunter.net/?_task=addressbook&_action=photo'
+        ];
+        yield [
+            'https://webmail.todhunter.net/?_task=mail&_action=plugin.markasjunk.junk',
+            'https://webmail.todhunter.net/?_task=mail&_action=plugin.markasjunk.junk'
+        ];
+        yield [
+            'https://webmail.todhunter.net/?_task=mail&_mbox=INBOX',
+            'https://webmail.todhunter.net/?_task=mail'
+        ];
+        yield [
+            'https://webmail.todhunter.net/?_task=mail&_action=refresh',
+            'https://webmail.todhunter.net/?_task=mail&_action=refresh'
+        ];
+    }
+
+    #[DataProvider('urlTrimmingProvider')]
+    public function testUrlTrimming($actualUrl, $expectedUrl)
+    {
+        $plugin = $this->setupPlugin([
+            self::CONFIG_VAR_SITE_ID => 1,
+            self::CONFIG_VAR_URL => 'example.com'
+        ]);
+
+        $tracker = $this->createTracker(1);
+        $plugin->setTracker($tracker);
+
+        $reflection = new \ReflectionClass($plugin);
+
+        $method = $reflection->getMethod('trimUrlForTracking');
+        $method->setAccessible(true);
+
+        $actual = $method->invoke($plugin, $actualUrl);
+
+        $this->assertSame($expectedUrl, $actual);
     }
 }
 
