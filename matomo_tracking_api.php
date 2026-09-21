@@ -3,17 +3,32 @@
 require_once __DIR__ . '/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
 
 /**
- * Matomo Tracking API.
+ * Matomo tracking API plugin for Roundcube webmail.
  *
- * Adds the PHP Matomo tracking API.
- *
- * @author Andrei Nicholson
- * @url https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin
+ * Adds the PHP Matomo tracking API to all server-side requests.
  */
 class matomo_tracking_api extends rcube_plugin
 {
+    private const PLUGIN_VERSION = '2.0.0';
+
     private $tracker = null;
     private $rcmail = null;
+
+    /**
+     * Provide information about this plugin.
+     *
+     * @return array Meta information about plugin.
+     */
+    public static function info()
+    {
+        return [
+            'name'    => 'Matomo Tracking',
+            'vendor'  => 'Andrei Nicholson',
+            'version' => self::PLUGIN_VERSION,
+            'license' => 'GPL-3.0-or-later',
+            'uri'     => 'https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin'
+        ];
+    }
 
     /**
      * Call prior to {@see init()} to inject a custom tracker. Intended for
