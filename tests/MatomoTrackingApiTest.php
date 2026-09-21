@@ -546,32 +546,32 @@ final class MatomoTrackingApiTest extends TestCase
             'https://example.com/?_task=mail&_action=search'
         ];
         yield [
-            'https://webmail.todhunter.net/?_task=mail&_action=compose&_id=1055218785c6ff83c75fcd',
-            'https://webmail.todhunter.net/?_task=mail&_action=compose'
+            'https://webmail.example.net/?_task=mail&_action=compose&_id=1055218785c6ff83c75fcd',
+            'https://webmail.example.net/?_task=mail&_action=compose'
         ];
         yield [
             'https://example.com/?_task=mail&_reply_uid=103048&_action=compose',
             'https://example.com/?_task=mail&_action=compose'
         ];
         yield [
-            'https://webmail.leedrei.com/?_task=mail&_search=06ba5642e8f9b838e3bc4e352cf89569&_action=preview',
-            'https://webmail.leedrei.com/?_task=mail&_action=preview'
+            'https://webmail.example.com/?_task=mail&_search=06ba5642e8f9b838e3bc4e352cf89569&_action=preview',
+            'https://webmail.example.com/?_task=mail&_action=preview'
         ];
         yield [
-            'https://webmail.todhunter.net/?_task=addressbook&_action=photo&_email=channah.valkos@ymcagreensboro.org&_error=1',
-            'https://webmail.todhunter.net/?_task=addressbook&_action=photo'
+            'https://webmail.example.net/?_task=addressbook&_action=photo&_email=review.pull@example.org&_error=1',
+            'https://webmail.example.net/?_task=addressbook&_action=photo'
         ];
         yield [
-            'https://webmail.todhunter.net/?_task=mail&_action=plugin.markasjunk.junk',
-            'https://webmail.todhunter.net/?_task=mail&_action=plugin.markasjunk.junk'
+            'https://webmail.example.net/?_task=mail&_action=plugin.markasjunk.junk',
+            'https://webmail.example.net/?_task=mail&_action=plugin.markasjunk.junk'
         ];
         yield [
-            'https://webmail.todhunter.net/?_task=mail&_mbox=INBOX',
-            'https://webmail.todhunter.net/?_task=mail'
+            'https://webmail.example.net/?_task=mail&_mbox=INBOX',
+            'https://webmail.example.net/?_task=mail'
         ];
         yield [
-            'https://webmail.todhunter.net/?_task=mail&_action=refresh',
-            'https://webmail.todhunter.net/?_task=mail&_action=refresh'
+            'https://webmail.example.net/?_task=mail&_action=refresh',
+            'https://webmail.example.net/?_task=mail&_action=refresh'
         ];
     }
 
