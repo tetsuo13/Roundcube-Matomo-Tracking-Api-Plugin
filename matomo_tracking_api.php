@@ -131,12 +131,12 @@ class matomo_tracking_api extends rcube_plugin
     /**
      * Remove any Personally Identifiable Information (PII) from the URL.
      *
-     * @param string
-     * @return string
+     * @param string $url The full URL to scrub.
+     * @return string The URL scrubbed of PII data.
      */
     private static function trimUrlForTracking($url)
     {
-        if ($url === '') {
+        if ($url === '' || $url === null) {
             return $url;
         }
 

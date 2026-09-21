@@ -540,6 +540,7 @@ final class MatomoTrackingApiTest extends TestCase
 
     public static function urlTrimmingProvider(): Generator
     {
+        yield [null, null];
         yield ['', ''];
         yield [
             'https://example.com/?_task=mail&_action=search&_interval=&_q=alice&_headers=from,subject&_filter=ALL&_scope=base',
