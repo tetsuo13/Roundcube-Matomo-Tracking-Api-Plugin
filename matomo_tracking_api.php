@@ -145,7 +145,8 @@ class matomo_tracking_api extends rcube_plugin
 
         $safe = array_intersect_key($query, array_flip(['_task', '_action']));
 
-        $url = $parts['scheme'] . '://' . $parts['host'] . $parts['path']
+        $url = $parts['scheme'] . '://' . $parts['host']
+             . ($parts['path'] ?? '')
              . ($safe ? '?' . http_build_query($safe) : '');
 
         return $url;

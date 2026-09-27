@@ -574,6 +574,22 @@ final class MatomoTrackingApiTest extends TestCase
             'https://webmail.example.net/?_task=mail&_action=refresh',
             'https://webmail.example.net/?_task=mail&_action=refresh'
         ];
+        yield [
+            'https://webmail.example.com/&urlref=http://www.google.com.hk&pv_id=71902a',
+            'https://webmail.example.com/&urlref=http://www.google.com.hk&pv_id=71902a'
+        ];
+        yield [
+            'https://www.webmail.example.com:443',
+            'https://www.webmail.example.com'
+        ];
+        yield [
+            'http://www.webmail.example.com:80',
+            'http://www.webmail.example.com'
+        ];
+        yield [
+            'https://www.webmail.example.com',
+            'https://www.webmail.example.com'
+        ];
     }
 
     #[DataProvider('urlTrimmingProvider')]
