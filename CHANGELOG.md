@@ -1,6 +1,8 @@
 # Roundcube Matomo Tracking API Changelog
 
-## [Unreleased](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/compare/2.0.0...main)
+## [Unreleased](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/compare/3.0...main)
+
+## [3.0](https://github.com/tetsuo13/Roundcube-Matomo-Tracking-Api-Plugin/compare/2.0.0...3.0) (2026-10-03)
 
 - Renamed from Piwik to Matomo.
 - Removed bundled matomo-php-tracker in favor of using Composer to handle dependencies.

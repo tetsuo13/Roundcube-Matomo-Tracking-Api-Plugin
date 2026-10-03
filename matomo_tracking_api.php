@@ -9,7 +9,7 @@ require_once __DIR__ . '/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
  */
 class matomo_tracking_api extends rcube_plugin
 {
-    private const PLUGIN_VERSION = '2.0.0';
+    private const PLUGIN_VERSION = '3.0';
 
     private $tracker = null;
     private $rcmail = null;
